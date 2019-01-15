@@ -6,6 +6,7 @@
 package javafxhelloworld;
 
 import javafx.application.Application;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -19,42 +20,80 @@ import javafx.stage.Stage;
  */
 public class JavaFXHelloWorld extends Application {
     
-    @Override
-    public void start(Stage primaryStage) {
-        Pane root = new Pane ();
-        Scene scene = new Scene (root, 600, 400, Color.BLACK);
-        primaryStage.setTitle("Videojuego");
-        primaryStage.setScene(scene);
-        primaryStage.show();  
+    Pane root;
+    
+    public void avion() {
         
-        Ellipse ellipse = new Ellipse(); {
-            ellipse.setCenterX(150.0f);
-            ellipse.setCenterY(100.0f);
-            ellipse.setRadiusX(45.0f);
-            ellipse.setRadiusY(10.0f);
-            ellipse.setFill(Color.YELLOW);
-            root.getChildren().add(ellipse);
+        Group groupAvion = new Group(); 
+        
+        Ellipse cuerpo = new Ellipse(); {
+            cuerpo.setCenterX(150.0f);
+            cuerpo.setCenterY(100.0f);
+            cuerpo.setRadiusX(45.0f);
+            cuerpo.setRadiusY(10.0f);
+            cuerpo.setFill(Color.WHITE);
+            groupAvion.getChildren().add(cuerpo);
         }
         Polygon polygonAla1 = new Polygon(new double[]{
             130.0, 75.0,
             180.0, 100.0,
             145.0, 100.0
         });
-        polygonAla1.setFill(Color.YELLOW);
-        root.getChildren().add(polygonAla1);
+        polygonAla1.setFill(Color.WHITE);
+        groupAvion.getChildren().add(polygonAla1);
+        
         Polygon polygonAla2 = new Polygon(new double[]{
             130.0, 140.0,
-            180.0, 100.0,
+            175.0, 100.0,
             145.0, 100.0
         });
-        polygonAla2.setFill(Color.YELLOW);
-        root.getChildren().add(polygonAla2);
+        polygonAla2.setFill(Color.WHITE);
+        groupAvion.getChildren().add(polygonAla2);
+        
         Polygon polygonAlaTrasera = new Polygon(new double[]{
-            110.0, 85.0,
-            110.0, 95.0,
+            100.0, 85.0,
+            105.0, 100.0,
             120.0, 95.0
         });
-        polygonAlaTrasera.setFill(Color.YELLOW);
-        root.getChildren().add(polygonAlaTrasera);
+        polygonAlaTrasera.setFill(Color.WHITE);
+        groupAvion.getChildren().add(polygonAlaTrasera);
+        
+        Polygon polygonAlaTrasera1 = new Polygon(new double[]{
+            100.0, 115.0,
+            105.0, 100.0,
+            120.0, 100.0
+        });
+        polygonAlaTrasera1.setFill(Color.WHITE);
+        groupAvion.getChildren().add(polygonAlaTrasera1);
+        
+        Polygon polygonAlaTrasera2 = new Polygon(new double[]{
+            110.0, 85.0,
+            105.0, 100.0,
+            120.0, 100.0
+        });
+        polygonAlaTrasera2.setFill(Color.WHITE);
+        groupAvion.getChildren().add(polygonAlaTrasera2);
+        
+        Ellipse ventana = new Ellipse(); {
+            ventana.setCenterX(185.0f);
+            ventana.setCenterY(96.0f);
+            ventana.setRadiusX(7.0f);
+            ventana.setRadiusY(3.0f);
+            ventana.setFill(Color.AQUA);
+            groupAvion.getChildren().add(ventana);
+        root.getChildren().add(groupAvion);
+        ventana.setRotate(18);
+        }
     }
+    @Override
+    public void start(Stage primaryStage) {
+        
+        root = new Pane ();
+        Scene scene = new Scene (root, 600, 400, Color.GREY);
+        primaryStage.setTitle("Videojuego");
+        primaryStage.setScene(scene);
+        primaryStage.show();  
+        avion();
+    }
+
 }
