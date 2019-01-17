@@ -5,11 +5,14 @@
  */
 package es.antoniomanuelramirez.videojuego;
 
+import javafx.animation.AnimationTimer;
 import javafx.scene.image.Image;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
@@ -23,7 +26,10 @@ import javafx.stage.Stage;
 public class JavaFXHelloWorld extends Application {
     
     Pane root;
-    
+    int posicion1 = 0;
+    int posicion2 = 600;
+    int velocidad = -1;
+    Scene scene;
     public void avion() {
         
         Group groupAvion = new Group(); 
@@ -87,21 +93,52 @@ public class JavaFXHelloWorld extends Application {
         ventana.setRotate(18);
         }
         groupAvion.setLayoutY(80);
+        groupAvion.setScaleX(1.3);
+        groupAvion.setScaleY(1.3);
+    }
+    public void movTeclas(){
+        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) { 
+            }
+        });
     }
     @Override
     public void start(Stage primaryStage) {
         
         root = new Pane ();
-        Scene scene = new Scene (root, 600, 400);
+        scene = new Scene (root, 600, 400);
         primaryStage.setTitle("Videojuego");
         primaryStage.setScene(scene);
         primaryStage.show(); 
-        Image image1 = new Image(getClass().getResourceAsStream("images/background_land.png"));
-        ImageView imageView1 = new ImageView(image1);
-        root.getChildren().add(imageView1);
-        imageView1.setFitWidth(600);
-        imageView1.setFitHeight(400);
+        Image image = new Image("background_land.png");
+        ImageView fondo1 = new ImageView(); 
+        ImageView fondo2 = new ImageView();
+        fondo1.setImage(image);
+        fondo2.setImage(image);
+        fondo1.setFitWidth(600);
+        fondo1.setFitHeight(400);
+        fondo2.setFitWidth(600);
+        fondo2.setFitHeight(400);
+        root.getChildren().add(fondo1);
+        root.getChildren().add(fondo2);
         avion();
+        AnimationTimer movimiento = new AnimationTimer(){
+            @Override
+            public void handle(long now){
+                fondo1.setX(posicion1);
+                fondo2.setX(posicion2);
+                posicion1+=velocidad;
+                posicion2+=velocidad;
+                if (posicion2==0){
+                    posicion1=600;
+                }
+                if (posicion1==0){
+                    posicion2=600;
+                }
+            };
+        };
+        movimiento.start();
     }
 
 }
