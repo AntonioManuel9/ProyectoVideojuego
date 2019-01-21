@@ -29,10 +29,12 @@ public class JavaFXHelloWorld extends Application {
     int posicion1 = 0;
     int posicion2 = 600;
     int velocidad = -1;
+    int avionCurrentSpeed = 0;
     Scene scene;
+    Group groupAvion = new Group();
+    int posAvionX = 100;
+    
     public void avion() {
-        
-        Group groupAvion = new Group(); 
         
         Ellipse cuerpo = new Ellipse(); {
             cuerpo.setCenterX(150.0f);
@@ -93,25 +95,11 @@ public class JavaFXHelloWorld extends Application {
         ventana.setRotate(18);
         }
         groupAvion.setLayoutY(80);
-        groupAvion.setScaleX(1.3);
-        groupAvion.setScaleY(1.3);
+        groupAvion.setScaleX(1.1);
+        groupAvion.setScaleY(1.1);
     }
-    public void movTeclas(){
-        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) { 
-            }
-        });
-    }
-    @Override
-    public void start(Stage primaryStage) {
-        
-        root = new Pane ();
-        scene = new Scene (root, 600, 400);
-        primaryStage.setTitle("Videojuego");
-        primaryStage.setScene(scene);
-        primaryStage.show(); 
-        Image image = new Image("background_land.png");
+    public void fondo(){
+        Image image = new Image("/es/antoniomanuelramirez/videojuego/images/background_land.png");
         ImageView fondo1 = new ImageView(); 
         ImageView fondo2 = new ImageView();
         fondo1.setImage(image);
@@ -122,7 +110,6 @@ public class JavaFXHelloWorld extends Application {
         fondo2.setFitHeight(400);
         root.getChildren().add(fondo1);
         root.getChildren().add(fondo2);
-        avion();
         AnimationTimer movimiento = new AnimationTimer(){
             @Override
             public void handle(long now){
@@ -136,9 +123,32 @@ public class JavaFXHelloWorld extends Application {
                 if (posicion1==0){
                     posicion2=600;
                 }
+                posAvionX += avionCurrentSpeed;
+                groupAvion.setLayoutY(posAvionX);
             };
         };
         movimiento.start();
+    }
+    @Override
+    public void start(Stage primaryStage) {
+        
+        root = new Pane ();
+        scene = new Scene (root, 600, 400);
+        primaryStage.setTitle("Videojuego");
+        primaryStage.setScene(scene);
+        primaryStage.show(); 
+        fondo();
+        avion();
+        scene.setOnKeyPressed((KeyEvent event) -> {
+            switch(event.getCode()) {
+                case UP:
+                    avionCurrentSpeed = -2;
+                    break;
+                case DOWN:
+                    avionCurrentSpeed = 2;
+                    break;
+            }
+        });
     }
 
 }
