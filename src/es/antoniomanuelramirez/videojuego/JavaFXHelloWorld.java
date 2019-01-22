@@ -5,10 +5,10 @@
  */
 package es.antoniomanuelramirez.videojuego;
 
+import java.util.Random;
 import javafx.animation.AnimationTimer;
 import javafx.scene.image.Image;
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
@@ -129,6 +129,22 @@ public class JavaFXHelloWorld extends Application {
         };
         movimiento.start();
     }
+    public void obstaculos() {
+        Image image1 = new Image("/es/antoniomanuelramirez/videojuego/images/1.png");
+        ImageView obstaculo1 = new ImageView();
+        obstaculo1.setImage(image1);
+        root.getChildren().add(obstaculo1);
+        
+        Image image2 = new Image("/es/antoniomanuelramirez/videojuego/images/2.png");
+        ImageView obstaculo2 = new ImageView();
+        obstaculo1.setImage(image2);
+        root.getChildren().add(obstaculo2);
+        
+        Image image3 = new Image("/es/antoniomanuelramirez/videojuego/images/1.png");
+        ImageView obstaculo3 = new ImageView();
+        obstaculo1.setImage(image3);
+        root.getChildren().add(obstaculo3);
+    }
     @Override
     public void start(Stage primaryStage) {
         
@@ -139,6 +155,7 @@ public class JavaFXHelloWorld extends Application {
         primaryStage.show(); 
         fondo();
         avion();
+        obstaculos();
         scene.setOnKeyPressed((KeyEvent event) -> {
             switch(event.getCode()) {
                 case UP:
@@ -149,6 +166,12 @@ public class JavaFXHelloWorld extends Application {
                     break;
             }
         });
+        scene.setOnKeyReleased((KeyEvent event) -> {
+            avionCurrentSpeed = 0;
+        });
+        Random obstaculo1 = new Random();
+        int PosObstaculo1 = obstaculo1.nextInt(800);
+        
     }
 
 }
