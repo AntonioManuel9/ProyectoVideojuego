@@ -5,7 +5,6 @@
  */
 package es.antoniomanuelramirez.videojuego;
 
-import java.util.Random;
 import javafx.animation.AnimationTimer;
 import javafx.scene.image.Image;
 import javafx.application.Application;
@@ -17,6 +16,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
 
 /**
@@ -33,6 +34,16 @@ public class JavaFXHelloWorld extends Application {
     Scene scene;
     Group groupAvion = new Group();
     int posAvionX = 100;
+    Polygon polygonAla1 = new Polygon(new double[]{
+            130.0, 75.0,
+            180.0, 100.0,
+            145.0, 100.0
+    });
+    Polygon polygonAla2 = new Polygon(new double[]{
+            130.0, 140.0,
+            175.0, 100.0,
+            145.0, 100.0
+    });
     
     public void avion() {
         
@@ -44,19 +55,11 @@ public class JavaFXHelloWorld extends Application {
             cuerpo.setFill(Color.BLACK);
             groupAvion.getChildren().add(cuerpo);
         }
-        Polygon polygonAla1 = new Polygon(new double[]{
-            130.0, 75.0,
-            180.0, 100.0,
-            145.0, 100.0
-        });
+        // Color del primer Ala
         polygonAla1.setFill(Color.BLACK);
         groupAvion.getChildren().add(polygonAla1);
         
-        Polygon polygonAla2 = new Polygon(new double[]{
-            130.0, 140.0,
-            175.0, 100.0,
-            145.0, 100.0
-        });
+        // Color del segundo Ala
         polygonAla2.setFill(Color.BLACK);
         groupAvion.getChildren().add(polygonAla2);
         
@@ -110,6 +113,9 @@ public class JavaFXHelloWorld extends Application {
         fondo2.setFitHeight(400);
         root.getChildren().add(fondo1);
         root.getChildren().add(fondo2);
+        // Rectangulos para la colision del avion
+        Rectangle colisionAbajo = new Rectangle(0, 265, 600, 100 );
+        Rectangle colisionArriba = new Rectangle(0, 10, 600, 10);
         AnimationTimer movimiento = new AnimationTimer(){
             @Override
             public void handle(long now){
@@ -125,25 +131,24 @@ public class JavaFXHelloWorld extends Application {
                 }
                 posAvionX += avionCurrentSpeed;
                 groupAvion.setLayoutY(posAvionX);
+                Shape shapeColision = Shape.intersect(polygonAla1, colisionAbajo);
+                boolean colisionVacia = shapeColision.getBoundsInLocal().isEmpty();
+                Shape shapeColision2 = Shape.intersect(polygonAla2, colisionArriba);
+                boolean colisionVacia2 = shapeColision2.getBoundsInLocal().isEmpty();
+                if (colisionVacia == false){
+                    reiniciar();
+                }
+                if (colisionVacia2 == false){
+                    reiniciar();
+                }
             };
         };
         movimiento.start();
     }
-    public void obstaculos() {
-        Image image1 = new Image("/es/antoniomanuelramirez/videojuego/images/1.png");
-        ImageView obstaculo1 = new ImageView();
-        obstaculo1.setImage(image1);
-        root.getChildren().add(obstaculo1);
-        
-        Image image2 = new Image("/es/antoniomanuelramirez/videojuego/images/2.png");
-        ImageView obstaculo2 = new ImageView();
-        obstaculo1.setImage(image2);
-        root.getChildren().add(obstaculo2);
-        
-        Image image3 = new Image("/es/antoniomanuelramirez/videojuego/images/1.png");
-        ImageView obstaculo3 = new ImageView();
-        obstaculo1.setImage(image3);
-        root.getChildren().add(obstaculo3);
+    public void reiniciar(){
+        posAvionX = 100;
+        posicion1 = 0;
+        posicion2 = 600;
     }
     @Override
     public void start(Stage primaryStage) {
@@ -153,9 +158,8 @@ public class JavaFXHelloWorld extends Application {
         primaryStage.setTitle("Videojuego");
         primaryStage.setScene(scene);
         primaryStage.show(); 
-        fondo();
-        avion();
-        obstaculos();
+        this.fondo();
+        this.avion();
         scene.setOnKeyPressed((KeyEvent event) -> {
             switch(event.getCode()) {
                 case UP:
@@ -169,9 +173,6 @@ public class JavaFXHelloWorld extends Application {
         scene.setOnKeyReleased((KeyEvent event) -> {
             avionCurrentSpeed = 0;
         });
-        Random obstaculo1 = new Random();
-        int PosObstaculo1 = obstaculo1.nextInt(800);
-        
     }
 
 }
