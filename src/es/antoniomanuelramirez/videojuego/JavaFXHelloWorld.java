@@ -5,6 +5,7 @@
  */
 package es.antoniomanuelramirez.videojuego;
 
+import java.util.Random;
 import javafx.animation.AnimationTimer;
 import javafx.scene.image.Image;
 import javafx.application.Application;
@@ -27,13 +28,16 @@ import javafx.stage.Stage;
 public class JavaFXHelloWorld extends Application {
     
     Pane root;
+    ImageView obstaculo1;
+    ImageView obstaculo2;
     int posicion1 = 0;
     int posicion2 = 600;
-    int velocidad = -1;
+    int velocidad = -3;
     int avionCurrentSpeed = 0;
     Scene scene;
     Group groupAvion = new Group();
     int posAvionX = 100;
+    int posicionObsX;
     Polygon polygonAla1 = new Polygon(new double[]{
             130.0, 75.0,
             180.0, 100.0,
@@ -46,7 +50,7 @@ public class JavaFXHelloWorld extends Application {
     });
     
     public void avion() {
-        
+        // Cuerpo del avión
         Ellipse cuerpo = new Ellipse(); {
             cuerpo.setCenterX(150.0f);
             cuerpo.setCenterY(100.0f);
@@ -62,7 +66,7 @@ public class JavaFXHelloWorld extends Application {
         // Color del segundo Ala
         polygonAla2.setFill(Color.BLACK);
         groupAvion.getChildren().add(polygonAla2);
-        
+        // Creacion de la parte trasera
         Polygon polygonAlaTrasera = new Polygon(new double[]{
             100.0, 85.0,
             105.0, 100.0,
@@ -86,7 +90,7 @@ public class JavaFXHelloWorld extends Application {
         });
         polygonAlaTrasera2.setFill(Color.BLACK);
         groupAvion.getChildren().add(polygonAlaTrasera2);
-        
+        // Elipse para la ventana del avion.
         Ellipse ventana = new Ellipse(); {
             ventana.setCenterX(185.0f);
             ventana.setCenterY(96.0f);
@@ -123,6 +127,8 @@ public class JavaFXHelloWorld extends Application {
                 fondo2.setX(posicion2);
                 posicion1+=velocidad;
                 posicion2+=velocidad;
+                obstaculo2.setX(posicion2 + posicionObsX);
+                obstaculo1.setX(posicion2 + posicionObsX);
                 if (posicion2==0){
                     posicion1=600;
                 }
@@ -150,6 +156,24 @@ public class JavaFXHelloWorld extends Application {
         posicion1 = 0;
         posicion2 = 600;
     }
+    public void obstaculos(){
+        Image image1 = new Image ("/es/antoniomanuelramirez/videojuego/images/Sprite_04.png");
+        Image image2 = new Image ("/es/antoniomanuelramirez/videojuego/images/Sprite_01.png");
+        obstaculo1 = new ImageView();
+        obstaculo2 = new ImageView();
+        obstaculo1.setImage(image1);
+        obstaculo2.setImage(image2);
+        obstaculo2.setFitWidth(90);
+        obstaculo2.setFitHeight(185);
+        obstaculo2.setY(170);
+        obstaculo1.setFitWidth(100);
+        obstaculo1.setFitHeight(150);
+        obstaculo1.setY(170);
+        Random random = new Random();
+        posicionObsX = random.nextInt(800);
+        root.getChildren().add(obstaculo1);
+        root.getChildren().add(obstaculo2);
+    }
     @Override
     public void start(Stage primaryStage) {
         
@@ -159,6 +183,7 @@ public class JavaFXHelloWorld extends Application {
         primaryStage.setScene(scene);
         primaryStage.show(); 
         this.fondo();
+        this.obstaculos();
         this.avion();
         scene.setOnKeyPressed((KeyEvent event) -> {
             switch(event.getCode()) {
