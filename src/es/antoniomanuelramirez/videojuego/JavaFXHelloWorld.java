@@ -37,7 +37,10 @@ public class JavaFXHelloWorld extends Application {
     Scene scene;
     Group groupAvion = new Group();
     int posAvionX = 100;
-    int posicionObsX;
+    int posicionAleatoria;
+    int obstaculo1X = 650;
+    int obstaculo2X = 680;
+    Random random = new Random();
     Polygon polygonAla1 = new Polygon(new double[]{
             130.0, 75.0,
             180.0, 100.0,
@@ -102,8 +105,8 @@ public class JavaFXHelloWorld extends Application {
         ventana.setRotate(18);
         }
         groupAvion.setLayoutY(80);
-        groupAvion.setScaleX(1.1);
-        groupAvion.setScaleY(1.1);
+        groupAvion.setScaleX(1.0);
+        groupAvion.setScaleY(1.0);
     }
     public void fondo(){
         Image image = new Image("/es/antoniomanuelramirez/videojuego/images/background_land.png");
@@ -125,18 +128,32 @@ public class JavaFXHelloWorld extends Application {
             public void handle(long now){
                 fondo1.setX(posicion1);
                 fondo2.setX(posicion2);
+                // Movimiento del fondo
                 posicion1+=velocidad;
                 posicion2+=velocidad;
-                obstaculo2.setX(posicion2 + posicionObsX);
-                obstaculo1.setX(posicion2 + posicionObsX);
+                // Movimiento de los obstaculos
+                obstaculo1X+=velocidad;
+                obstaculo2X+=velocidad;
+//                Establecesmos la posicion de los obstaculos
+                obstaculo1.setX(obstaculo1X + posicionAleatoria + posicionAleatoria);
+                obstaculo2.setX(obstaculo2X + posicionAleatoria);
                 if (posicion2==0){
                     posicion1=600;
                 }
                 if (posicion1==0){
                     posicion2=600;
                 }
+                if(obstaculo1X == -200){
+                    int distancia = random.nextInt(950);
+                    obstaculo1X = distancia + obstaculo2X;
+                }
+                if(obstaculo2X == -200){
+                    int distancia = random.nextInt(950);
+                    obstaculo2X = distancia + obstaculo1X;
+                }
                 posAvionX += avionCurrentSpeed;
                 groupAvion.setLayoutY(posAvionX);
+                // Creacion de la colision.
                 Shape shapeColision = Shape.intersect(polygonAla1, colisionAbajo);
                 boolean colisionVacia = shapeColision.getBoundsInLocal().isEmpty();
                 Shape shapeColision2 = Shape.intersect(polygonAla2, colisionArriba);
@@ -155,6 +172,8 @@ public class JavaFXHelloWorld extends Application {
         posAvionX = 100;
         posicion1 = 0;
         posicion2 = 600;
+        obstaculo1X = 650;
+        obstaculo2X = 680;
     }
     public void obstaculos(){
         Image image1 = new Image ("/es/antoniomanuelramirez/videojuego/images/Sprite_04.png");
@@ -165,12 +184,13 @@ public class JavaFXHelloWorld extends Application {
         obstaculo2.setImage(image2);
         obstaculo2.setFitWidth(90);
         obstaculo2.setFitHeight(185);
-        obstaculo2.setY(170);
+        obstaculo2.setY(145);
+//        obstaculo2.setX(obstaculo2X);
         obstaculo1.setFitWidth(100);
         obstaculo1.setFitHeight(150);
         obstaculo1.setY(170);
-        Random random = new Random();
-        posicionObsX = random.nextInt(800);
+//        obstaculo1.setX(obstaculo1X);
+        posicionAleatoria = random.nextInt(950);
         root.getChildren().add(obstaculo1);
         root.getChildren().add(obstaculo2);
     }
