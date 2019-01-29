@@ -32,7 +32,7 @@ public class JavaFXHelloWorld extends Application {
     ImageView obstaculo2;
     int posicion1 = 0;
     int posicion2 = 600;
-    int velocidad = -3;
+    int velocidad = -2;
     int avionCurrentSpeed = 0;
     Scene scene;
     Group groupAvion = new Group();
@@ -123,6 +123,7 @@ public class JavaFXHelloWorld extends Application {
         // Rectangulos para la colision del avion
         Rectangle colisionAbajo = new Rectangle(0, 265, 600, 100 );
         Rectangle colisionArriba = new Rectangle(0, 10, 600, 10);
+//        Rectangle colisionObs1 = new Rectangle(obstaculo1X, 170, 100, 150);
         AnimationTimer movimiento = new AnimationTimer(){
             @Override
             public void handle(long now){
@@ -135,21 +136,21 @@ public class JavaFXHelloWorld extends Application {
                 obstaculo1X+=velocidad;
                 obstaculo2X+=velocidad;
 //                Establecesmos la posicion de los obstaculos
-                obstaculo1.setX(obstaculo1X + posicionAleatoria + posicionAleatoria);
-                obstaculo2.setX(obstaculo2X + posicionAleatoria);
-                if (posicion2==0){
+                obstaculo1.setX(obstaculo1X + posicionAleatoria);
+                obstaculo2.setX(obstaculo2X + posicionAleatoria + posicionAleatoria);
+                if (posicion2 == 0){
                     posicion1=600;
                 }
-                if (posicion1==0){
-                    posicion2=600;
+                if (posicion1 == 0){
+                    posicion2 = 600;
                 }
-                if(obstaculo1X == -200){
+                if(obstaculo1X <= -500){
                     int distancia = random.nextInt(950);
-                    obstaculo1X = distancia + obstaculo2X;
+                    obstaculo1X = obstaculo2X + distancia;
                 }
-                if(obstaculo2X == -200){
+                if(obstaculo2X <= -550){
                     int distancia = random.nextInt(950);
-                    obstaculo2X = distancia + obstaculo1X;
+                    obstaculo2X = obstaculo1X + distancia;
                 }
                 posAvionX += avionCurrentSpeed;
                 groupAvion.setLayoutY(posAvionX);
@@ -158,12 +159,20 @@ public class JavaFXHelloWorld extends Application {
                 boolean colisionVacia = shapeColision.getBoundsInLocal().isEmpty();
                 Shape shapeColision2 = Shape.intersect(polygonAla2, colisionArriba);
                 boolean colisionVacia2 = shapeColision2.getBoundsInLocal().isEmpty();
+//                Shape shapeColision3 = Shape.intersect(cuerpo, colisionObs1);
+//                boolean colisionVacia3 = shapeColision3.getBoundsInLocal().isEmpty();
                 if (colisionVacia == false){
                     reiniciar();
+                    velocidad = 0;
                 }
                 if (colisionVacia2 == false){
                     reiniciar();
+                    velocidad = 0;
                 }
+//                if (colisionVacia3 == false){
+//                    reiniciar();
+//                    velocidad = 0;
+//                }
             };
         };
         movimiento.start();
@@ -185,11 +194,11 @@ public class JavaFXHelloWorld extends Application {
         obstaculo2.setFitWidth(90);
         obstaculo2.setFitHeight(185);
         obstaculo2.setY(145);
-//        obstaculo2.setX(obstaculo2X);
+        obstaculo2.setX(obstaculo2X);
         obstaculo1.setFitWidth(100);
         obstaculo1.setFitHeight(150);
         obstaculo1.setY(170);
-//        obstaculo1.setX(obstaculo1X);
+        obstaculo1.setX(obstaculo1X);
         posicionAleatoria = random.nextInt(950);
         root.getChildren().add(obstaculo1);
         root.getChildren().add(obstaculo2);
@@ -213,6 +222,9 @@ public class JavaFXHelloWorld extends Application {
                 case DOWN:
                     avionCurrentSpeed = 2;
                     break;
+                case ENTER:
+                    this.reiniciar();
+                    velocidad = -3;
             }
         });
         scene.setOnKeyReleased((KeyEvent event) -> {
