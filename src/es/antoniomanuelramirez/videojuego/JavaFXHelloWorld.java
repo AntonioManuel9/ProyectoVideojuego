@@ -30,16 +30,20 @@ public class JavaFXHelloWorld extends Application {
     Pane root;
     ImageView obstaculo1;
     ImageView obstaculo2;
+    ImageView obstaculo3;
     int posicion1 = 0;
     int posicion2 = 600;
-    int velocidad = -2;
+    int velocidad = -3;
     int avionCurrentSpeed = 0;
     Scene scene;
     Group groupAvion = new Group();
+    Ellipse cuerpo = new Ellipse();
     int posAvionX = 100;
     int posicionAleatoria;
     int obstaculo1X = 650;
     int obstaculo2X = 680;
+    int posYPajaro = 150;
+    int posXPajaro = 700;
     Random random = new Random();
     Polygon polygonAla1 = new Polygon(new double[]{
             130.0, 75.0,
@@ -54,7 +58,7 @@ public class JavaFXHelloWorld extends Application {
     
     public void avion() {
         // Cuerpo del avión
-        Ellipse cuerpo = new Ellipse(); {
+        cuerpo = new Ellipse(); {
             cuerpo.setCenterX(150.0f);
             cuerpo.setCenterY(100.0f);
             cuerpo.setRadiusX(45.0f);
@@ -127,6 +131,8 @@ public class JavaFXHelloWorld extends Application {
         AnimationTimer movimiento = new AnimationTimer(){
             @Override
             public void handle(long now){
+                System.out.println(obstaculo2X);
+                System.out.println(obstaculo1X);
                 fondo1.setX(posicion1);
                 fondo2.setX(posicion2);
                 // Movimiento del fondo
@@ -135,22 +141,28 @@ public class JavaFXHelloWorld extends Application {
                 // Movimiento de los obstaculos
                 obstaculo1X+=velocidad;
                 obstaculo2X+=velocidad;
+                posXPajaro+=velocidad;
 //                Establecesmos la posicion de los obstaculos
-                obstaculo1.setX(obstaculo1X + posicionAleatoria);
-                obstaculo2.setX(obstaculo2X + posicionAleatoria + posicionAleatoria);
+                obstaculo1.setX(obstaculo1X);
+                obstaculo2.setX(obstaculo2X + posicionAleatoria);
+                obstaculo3.setX(posXPajaro + posicionAleatoria + posicionAleatoria);
                 if (posicion2 == 0){
                     posicion1=600;
                 }
                 if (posicion1 == 0){
                     posicion2 = 600;
                 }
-                if(obstaculo1X <= -500){
+                if(obstaculo1X <= -400){
                     int distancia = random.nextInt(950);
-                    obstaculo1X = obstaculo2X + distancia;
+                    obstaculo1X = posXPajaro + distancia;
                 }
-                if(obstaculo2X <= -550){
+                if(obstaculo2X == -400){
                     int distancia = random.nextInt(950);
                     obstaculo2X = obstaculo1X + distancia;
+                }
+                if(posXPajaro <= 600) {
+                    int distancia = random.nextInt(950);
+                    posXPajaro = obstaculo2X + distancia;
                 }
                 posAvionX += avionCurrentSpeed;
                 groupAvion.setLayoutY(posAvionX);
@@ -187,10 +199,17 @@ public class JavaFXHelloWorld extends Application {
     public void obstaculos(){
         Image image1 = new Image ("/es/antoniomanuelramirez/videojuego/images/Sprite_04.png");
         Image image2 = new Image ("/es/antoniomanuelramirez/videojuego/images/Sprite_01.png");
+        Image image3 = new Image ("/es/antoniomanuelramirez/videojuego/images/Pajaro.gif");
         obstaculo1 = new ImageView();
         obstaculo2 = new ImageView();
+        obstaculo3 = new ImageView();
         obstaculo1.setImage(image1);
         obstaculo2.setImage(image2);
+        obstaculo3.setImage(image3);
+        obstaculo3.setFitWidth(100);
+        obstaculo3.setFitHeight(80);
+        obstaculo3.setY(posYPajaro);
+        obstaculo3.setX(posXPajaro);
         obstaculo2.setFitWidth(90);
         obstaculo2.setFitHeight(185);
         obstaculo2.setY(145);
@@ -202,6 +221,7 @@ public class JavaFXHelloWorld extends Application {
         posicionAleatoria = random.nextInt(950);
         root.getChildren().add(obstaculo1);
         root.getChildren().add(obstaculo2);
+        root.getChildren().add(obstaculo3);
     }
     @Override
     public void start(Stage primaryStage) {
