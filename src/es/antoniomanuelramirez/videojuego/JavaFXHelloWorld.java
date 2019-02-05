@@ -31,21 +31,20 @@ public class JavaFXHelloWorld extends Application {
     ImageView obstaculo1;
     ImageView obstaculo2;
     ImageView obstaculo3;
-    int posicion1 = 0;
-    int posicion2 = 600;
+    ImageView Score;
+    int posicionFondo1 = 0;
+    int posicionFondo2 = 600;
     int velocidad = -3;
     int AvionCurrentSpeed = 0;
-    int GrupoCurrentSpeed = 0;
     Scene scene;
     Group groupAvion = new Group();
     Group groupObs1 = new Group();
+    Group groupObs2 = new Group();
     Ellipse cuerpo = new Ellipse();
     int posAvionX = 100;
     int posicionAleatoria;
     int obstaculo1X = 650;
     int obstaculo2X = 680;
-    int posYPajaro = 150;
-    int posXPajaro = 700;
     Random random = new Random();
     Polygon polygonAla1 = new Polygon(new double[]{
             130.0, 75.0,
@@ -58,6 +57,7 @@ public class JavaFXHelloWorld extends Application {
             145.0, 100.0
     });
     Rectangle colisionObs1 = new Rectangle(obstaculo1X, 170, 40, 150);
+    Rectangle colisionObs2 = new Rectangle(obstaculo2X, 145, 40, 150);
     public void avion() {
         // Cuerpo del avión
         cuerpo = new Ellipse(); {
@@ -114,9 +114,37 @@ public class JavaFXHelloWorld extends Application {
         groupAvion.setScaleX(1.0);
         groupAvion.setScaleY(1.0);
     }
+    public void obstaculos(){
+        Image image1 = new Image ("/es/antoniomanuelramirez/videojuego/images/Sprite_04.png");
+        Image image2 = new Image ("/es/antoniomanuelramirez/videojuego/images/Sprite_01.png");
+        // Obstaculo 1
+        obstaculo1 = new ImageView();
+        obstaculo1.setImage(image1);
+        obstaculo1.setFitWidth(100);
+        obstaculo1.setFitHeight(150);
+        obstaculo1.setY(170);
+        obstaculo1.setX(obstaculo1X);
+        // Grupo para juntar la imagen del arbol y el rectangulo de la colision
+        groupObs1.getChildren().add(colisionObs1);
+        groupObs1.getChildren().add(obstaculo1);
+        root.getChildren().add(groupObs1);
+        // Obstaculo 2
+        obstaculo2 = new ImageView();
+        obstaculo2.setImage(image2);
+        obstaculo2.setFitWidth(90);
+        obstaculo2.setFitHeight(185);
+        obstaculo2.setY(145);
+        obstaculo2.setX(obstaculo2X);
+        // Grupo para juntar la imagen del arbol y el rectangulo de la colision
+        groupObs2.getChildren().add(colisionObs2);
+        groupObs2.getChildren().add(obstaculo2);
+        root.getChildren().add(groupObs2);
+        
+        posicionAleatoria = random.nextInt(950);    
+    }
     public void fondo(){
         Image image = new Image("/es/antoniomanuelramirez/videojuego/images/background_land.png");
-        int velocidadPajaro = -1;
+        Image image3 = new Image ("/es/antoniomanuelramirez/videojuego/images/Puntuacion.png");
         ImageView fondo1 = new ImageView(); 
         ImageView fondo2 = new ImageView();
         fondo1.setImage(image);
@@ -125,54 +153,55 @@ public class JavaFXHelloWorld extends Application {
         fondo1.setFitHeight(400);
         fondo2.setFitWidth(600);
         fondo2.setFitHeight(400);
+        // Letras del Score
+        Score = new ImageView();
+        Score.setImage(image3);
+        Score.setX(100);
+        Score.setY(30);
+        root.getChildren().add(Score);
         root.getChildren().add(fondo1);
         root.getChildren().add(fondo2);
         // Rectangulos para la colision del avion
         Rectangle colisionAbajo = new Rectangle(0, 265, 600, 100 );
         Rectangle colisionArriba = new Rectangle(0, 10, 600, 10);
-        colisionObs1 = new Rectangle(obstaculo1X, 180, 20, 150);
+        colisionObs1 = new Rectangle(obstaculo1X+45, 170, 20, 150);
+        colisionObs2 = new Rectangle(obstaculo2X+45, 145, 20, 150);
         root.getChildren().add(colisionObs1);
+        root.getChildren().add(colisionObs2);
        
         AnimationTimer movimiento = new AnimationTimer(){
             @Override
             public void handle(long now){
-                System.out.println(obstaculo2X);
-                System.out.println(obstaculo1X);
-                fondo1.setX(posicion1);
-                fondo2.setX(posicion2);
+//                System.out.println(obstaculo2X);
+//                System.out.println(obstaculo1X);
+                fondo1.setX(posicionFondo1);
+                fondo2.setX(posicionFondo2);
                 // Movimiento del fondo
-                posicion1+=velocidad;
-                posicion2+=velocidad;
+                posicionFondo1+=velocidad;
+                posicionFondo2+=velocidad;
                 // Movimiento de los obstaculos
                 obstaculo1X+=velocidad;
                 obstaculo2X+=velocidad;
-                posXPajaro+=velocidadPajaro;
                 // Velocidad para la colision de los obstaculos
 //                Establecesmos la posicion de los obstaculos
-                obstaculo1.setX(obstaculo1X);
-                obstaculo2.setX(obstaculo2X + posicionAleatoria);
-                obstaculo3.setX(posXPajaro + posicionAleatoria + posicionAleatoria);
-                if (posicion2 == 0){
-                    posicion1=600;
+                groupObs1.setLayoutX(obstaculo1X);
+                groupObs2.setLayoutX(obstaculo2X);
+                if (posicionFondo2 == 0){
+                    posicionFondo1=600;
                 }
-                if (posicion1 == 0){
-                    posicion2 = 600;
+                if (posicionFondo1 == 0){
+                    posicionFondo2 = 600;
                 }
-                if(obstaculo1X <= -400){
+                if(obstaculo1X <= -500){
                     int distancia = random.nextInt(950);
-                    obstaculo1X = posXPajaro + distancia;
+                    obstaculo1X = obstaculo2X + distancia;
                 }
                 if(obstaculo2X == -400){
                     int distancia = random.nextInt(950);
                     obstaculo2X = obstaculo1X + distancia;
                 }
-                if(posXPajaro <= 600) {
-                    int distancia = random.nextInt(950);
-                    posXPajaro = obstaculo2X + distancia;
-                }
                 posAvionX += AvionCurrentSpeed;
                 groupAvion.setLayoutY(posAvionX);
-                groupObs1.setLayoutX(obstaculo1X);
                 // Creacion de la colision.
                 // Colision con el suelo
                 Shape shapeColision = Shape.intersect(polygonAla1, colisionAbajo);
@@ -183,6 +212,9 @@ public class JavaFXHelloWorld extends Application {
                 // Colision con el primer obstaculo
                 Shape shapeColision3 = Shape.intersect(cuerpo, colisionObs1);
                 boolean colisionVacia3 = shapeColision3.getBoundsInLocal().isEmpty();
+                // Colision con el segundo obstaculo
+                Shape shapeColision4 = Shape.intersect(cuerpo, colisionObs2);
+                boolean colisionVacia4 = shapeColision4.getBoundsInLocal().isEmpty();
                 if (colisionVacia == false){
                     reiniciar();
                     velocidad = 0;
@@ -195,55 +227,23 @@ public class JavaFXHelloWorld extends Application {
                     reiniciar();
                     velocidad = 0;
                 }
+                if (colisionVacia4 == false){
+                    reiniciar();
+                    velocidad = 0;
+                }
             };
         };
         movimiento.start();
     }
     public void reiniciar(){
         posAvionX = 100;
-        posicion1 = 0;
-        posicion2 = 600;
+        posicionFondo1 = 0;
+        posicionFondo2 = 600;
         obstaculo1X = 650;
         obstaculo2X = 680;
     }
-    public void obstaculos(){
-        Image image1 = new Image ("/es/antoniomanuelramirez/videojuego/images/Sprite_04.png");
-        Image image2 = new Image ("/es/antoniomanuelramirez/videojuego/images/Sprite_01.png");
-        Image image3 = new Image ("/es/antoniomanuelramirez/videojuego/images/Pajaro.gif");
-        // Obstaculo 1
-        obstaculo1 = new ImageView();
-        obstaculo1.setImage(image1);
-        obstaculo1.setFitWidth(100);
-        obstaculo1.setFitHeight(150);
-        obstaculo1.setY(170);
-        obstaculo1.setX(obstaculo1X);
-        // Grupo para juntar la imagen del arbol y el rectangulo de la colision
-        groupObs1.getChildren().add(colisionObs1);
-        groupObs1.getChildren().add(obstaculo1);
-        root.getChildren().add(obstaculo1);
-        root.getChildren().add(groupObs1);
-        // Obstaculo 2
-        obstaculo2 = new ImageView();
-        obstaculo2.setImage(image2);
-        obstaculo2.setFitWidth(90);
-        obstaculo2.setFitHeight(185);
-        obstaculo2.setY(145);
-        obstaculo2.setX(obstaculo2X);
-        root.getChildren().add(obstaculo2);
-        // Obstaculo 3
-        obstaculo3 = new ImageView();
-        obstaculo3.setImage(image3);
-        obstaculo3.setFitWidth(100);
-        obstaculo3.setFitHeight(80);
-        obstaculo3.setY(posYPajaro);
-        obstaculo3.setX(posXPajaro);
-        root.getChildren().add(obstaculo3);
-        
-        posicionAleatoria = random.nextInt(950);    
-    }
     @Override
     public void start(Stage primaryStage) {
-        
         root = new Pane ();
         scene = new Scene (root, 600, 400);
         primaryStage.setTitle("Videojuego");
@@ -271,5 +271,4 @@ public class JavaFXHelloWorld extends Application {
             AvionCurrentSpeed = 0;
         });
     }
-
 }
