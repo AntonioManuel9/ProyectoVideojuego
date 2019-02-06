@@ -128,6 +128,7 @@ public class JavaFXHelloWorld extends Application {
         groupObs1.getChildren().add(colisionObs1);
         groupObs1.getChildren().add(obstaculo1);
         root.getChildren().add(groupObs1);
+        colisionObs1.setVisible(false);
         // Obstaculo 2
         obstaculo2 = new ImageView();
         obstaculo2.setImage(image2);
@@ -139,12 +140,12 @@ public class JavaFXHelloWorld extends Application {
         groupObs2.getChildren().add(colisionObs2);
         groupObs2.getChildren().add(obstaculo2);
         root.getChildren().add(groupObs2);
+        colisionObs2.setVisible(false);
         
-        posicionAleatoria = random.nextInt(950);    
+        posicionAleatoria = random.nextInt(500);    
     }
     public void fondo(){
         Image image = new Image("/es/antoniomanuelramirez/videojuego/images/background_land.png");
-        Image image3 = new Image ("/es/antoniomanuelramirez/videojuego/images/Puntuacion.png");
         ImageView fondo1 = new ImageView(); 
         ImageView fondo2 = new ImageView();
         fondo1.setImage(image);
@@ -153,12 +154,6 @@ public class JavaFXHelloWorld extends Application {
         fondo1.setFitHeight(400);
         fondo2.setFitWidth(600);
         fondo2.setFitHeight(400);
-        // Letras del Score
-        Score = new ImageView();
-        Score.setImage(image3);
-        Score.setX(100);
-        Score.setY(30);
-        root.getChildren().add(Score);
         root.getChildren().add(fondo1);
         root.getChildren().add(fondo2);
         // Rectangulos para la colision del avion
@@ -185,19 +180,19 @@ public class JavaFXHelloWorld extends Application {
                 // Velocidad para la colision de los obstaculos
 //                Establecesmos la posicion de los obstaculos
                 groupObs1.setLayoutX(obstaculo1X);
-                groupObs2.setLayoutX(obstaculo2X);
+                groupObs2.setLayoutX(obstaculo2X + posicionAleatoria);
                 if (posicionFondo2 == 0){
                     posicionFondo1=600;
                 }
                 if (posicionFondo1 == 0){
                     posicionFondo2 = 600;
                 }
-                if(obstaculo1X <= -500){
-                    int distancia = random.nextInt(950);
+                if(obstaculo1X <= -800){
+                    int distancia = random.nextInt(500);
                     obstaculo1X = obstaculo2X + distancia;
                 }
-                if(obstaculo2X == -400){
-                    int distancia = random.nextInt(950);
+                if(obstaculo2X <= -800){
+                    int distancia = random.nextInt(500);
                     obstaculo2X = obstaculo1X + distancia;
                 }
                 posAvionX += AvionCurrentSpeed;
@@ -235,6 +230,15 @@ public class JavaFXHelloWorld extends Application {
         };
         movimiento.start();
     }
+    public void puntuacion() {
+        // Letras del Score
+        Image image3 = new Image ("/es/antoniomanuelramirez/videojuego/images/Puntuacion.png");
+        Score = new ImageView();
+        Score.setImage(image3);
+        Score.setX(100);
+        Score.setY(70);
+        root.getChildren().add(Score);
+    }
     public void reiniciar(){
         posAvionX = 100;
         posicionFondo1 = 0;
@@ -253,6 +257,7 @@ public class JavaFXHelloWorld extends Application {
         this.fondo();
         this.obstaculos();
         this.avion();
+        this.puntuacion();
         // Movimiento del avion con las teclas
         scene.setOnKeyPressed((KeyEvent event) -> {
             switch(event.getCode()) {
