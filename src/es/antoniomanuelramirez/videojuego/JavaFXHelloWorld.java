@@ -168,7 +168,7 @@ public class JavaFXHelloWorld extends Application {
             @Override
             public void handle(long now){
 //                System.out.println(obstaculo2X);
-//                System.out.println(obstaculo1X);
+                System.out.println(obstaculo1X);
                 fondo1.setX(posicionFondo1);
                 fondo2.setX(posicionFondo2);
                 // Movimiento del fondo
@@ -231,12 +231,14 @@ public class JavaFXHelloWorld extends Application {
         movimiento.start();
     }
     public void puntuacion() {
-        // Letras del Score
+        // Letras del Score y posicion.
         Image image3 = new Image ("/es/antoniomanuelramirez/videojuego/images/Puntuacion.png");
         Score = new ImageView();
         Score.setImage(image3);
-        Score.setX(100);
-        Score.setY(70);
+        Score.setX(-40);
+        Score.setY(-100);
+        Score.setFitHeight(300);
+        Score.setFitWidth(200);
         root.getChildren().add(Score);
     }
     public void reiniciar(){
